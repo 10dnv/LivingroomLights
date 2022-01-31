@@ -47,6 +47,7 @@ void OS_task_Init()
 /* OS TASK fast: 0.25 uS period */
 void OS_task_fast()
 {
+    ArduinoOTA.handle();
 }
 
 /* OS TASK 1ms */

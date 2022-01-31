@@ -91,6 +91,7 @@ void Relay_Cyclic()
 void Function_Init()
 {
     irrecv.enableIRIn();
+    WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
     server.begin();
 
@@ -104,6 +105,47 @@ void Function_Init()
     Serial.print("http://");
     Serial.print(WiFi.localIP());
     Serial.println("/");
+
+
+ArduinoOTA.onStart([]() {
+    String type;
+    if (ArduinoOTA.getCommand() == U_FLASH) {
+      type = "sketch";
+    } else { // U_FS
+      type = "filesystem";
+    }
+
+    // NOTE: if updating FS this would be the place to unmount FS using FS.end()
+    Serial.println("Start updating " + type);
+  });
+  ArduinoOTA.onEnd([]() {
+    Serial.println("\nEnd");
+  });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    Serial.printf("Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) {
+      Serial.println("Auth Failed");
+    } else if (error == OTA_BEGIN_ERROR) {
+      Serial.println("Begin Failed");
+    } else if (error == OTA_CONNECT_ERROR) {
+      Serial.println("Connect Failed");
+    } else if (error == OTA_RECEIVE_ERROR) {
+      Serial.println("Receive Failed");
+    } else if (error == OTA_END_ERROR) {
+      Serial.println("End Failed");
+    }
+  });
+#endif /* #ifdef DEBUG_INFO */
+
+    ArduinoOTA.begin();
+
+#ifdef DEBUG_INFO
+    Serial.println("Ready");
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
 #endif /* #ifdef DEBUG_INFO */
 }
 
@@ -219,6 +261,13 @@ static void Function_Idle()
     if ((BtnArray[0].button_state == Button_LongPressed) && (BtnArray[1].button_state == Button_LongPressed))
     {
         activeFunction = SM_Function_Learn;
+    }
+
+     /* Check if RESET mode is being requested; This consists of buttons 1 & 2 to be long pressed*/
+    if ((BtnArray[1].button_state == Button_LongPressed) && (BtnArray[2].button_state == Button_LongPressed))
+    {
+        delay(3000);
+        ESP.restart();
     }
 
     /* Check if memorized remote control buttons are pressed; Every 300 cycles */

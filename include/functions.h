@@ -10,6 +10,11 @@
 
 #include <ESP8266WiFi.h>
 
+/* Used for OTA */
+#include <ESP8266mDNS.h>
+#include <WiFiUdp.h>
+#include <ArduinoOTA.h>
+
 
 /* ############## PROTOTYPES ############### */
 void Function_Init();
