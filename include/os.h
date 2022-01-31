@@ -4,7 +4,7 @@
 /* ############### INCLUDES ############### */
 #include <functions.h>
 
-/* ############### EXTERNALS ############### */
+/* ############### EXTERNALS ############## */
 
 /* OS Interface functions */
 extern void OS_task_Init();

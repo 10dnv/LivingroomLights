@@ -2,48 +2,49 @@
 #include <functions.h>
 #include <os.h>
 
-/* ############### VARIABILE GLOBALE ############### */
+/* ############### GLOBAL VARIABLES ############### */
 uint32 timeMain;
 
-/* Numele functiei: void setup()
-** Descriere      : Functie specifica Arduino care se apealeaza o singura data la pornire
-** Parametrii     : -
-** Return         : -
+/* Function name: void setup()
+** Description  : Arduino specific funtion; Called once on startup
+** Params       : -
+** Return       : -
 */
 void setup() 
 {
-    OS_task_Init(); /* Apelez task-ul de init */
+    OS_task_Init();
 }
 
-/* Numele functiei: void loop()
-** Descriere      : Functie specifica Arduino care se apealeaza ciclic
-** Parametrii     : -
-** Return         : -
+/* Function name: void loop()
+** Description  : Arduino specific funtion; Called cyclically
+** Params       : -
+** Return       : -
 */
 void loop()
 {
-    OS_task_fast();      /* Apelez task-ul rapid    */
+    /* Call different tasks based on their period */
+    OS_task_fast();
 
-    timeMain = millis();     /* Actualizez timpul       */
+    timeMain = millis();
     if (timeMain % 200 == 0)
     {
-        OS_task_200ms(); /* Apelez task-ul la 200ms */
+        OS_task_200ms();
     }
     else if (timeMain % 100 == 0)
     {
-        OS_task_100ms(); /* Apelez task-ul la 100ms */
+        OS_task_100ms();
     }
     else if (timeMain % 5 == 0)
     {
-        OS_task_5ms();  /* Apelez task-ul la 5ms    */
+        OS_task_5ms();
     }
     else if (timeMain % 1 == 0)
     {
-        OS_task_1ms();  /* Apelez task-ul la 1ms    */
+        OS_task_1ms();
     }
     else
     {
-        /* Nimic */
+        /* Nothing */
     }
     delay(1);
 }

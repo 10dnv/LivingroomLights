@@ -11,7 +11,7 @@
 #include <ESP8266WiFi.h>
 
 
-/* ############### PROTOTIPURI ############### */
+/* ############## PROTOTYPES ############### */
 void Function_Init();
 void MainAppStateMachine();
 
@@ -22,5 +22,4 @@ extern struct_btnCodes btnCodesIR_buffer;
 
 extern void Btn_Cyclic();
 extern void Relay_Cyclic();
-extern void schimbare_stare();
 #endif /* _FUNCTIONS_ */

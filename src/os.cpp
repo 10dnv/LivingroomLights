@@ -1,60 +1,55 @@
 /* ############### INCLUDES ############### */
 #include<os.h>
 
-
-/* OS TASK INIT: Se executa o singura data, la alimentarea cu energie electrica */
+/* OS TASK INIT: This task will only be executed once on startup */
 void OS_task_Init()
 {
-  EEPROM.begin(512);
-  Serial.begin(115200);
+    EEPROM.begin(512);
+    Serial.begin(115200);
     Function_Init();
-    // IRrecv irrecv(PIN_IR_RECEIVER);
-    
 
-   // irrecv.enableIRIn(); // Start the receiver
-    /* Se declara directia piniilor de iesire */
+    /* Set Output pins */
     pinMode(PIN_RELAY1, OUTPUT);
     pinMode(PIN_RELAY2, OUTPUT);
     pinMode(PIN_RELAY3, OUTPUT);
-    //pinMode(PIN_RELAY4, OUTPUT);
+#ifdef USE_4TH_RELAY
+    pinMode(PIN_RELAY4, OUTPUT);
+#endif /* #ifdef USE_4TH_RELAY */
 
-
-    /* Sting Releul implicit (functioneaza pe logica inversa) */
+    /* Setting all relays to OFF (since the work on inverted logic) */
     digitalWrite(PIN_RELAY1, HIGH);
     digitalWrite(PIN_RELAY2, HIGH);
     digitalWrite(PIN_RELAY3, HIGH);
-    //digitalWrite(PIN_RELAY4, HIGH);
-    
-    /* Se declara directia piniilor de intrare */
+#ifdef USE_4TH_RELAY
+    digitalWrite(PIN_RELAY4, HIGH);
+#endif /* #ifdef USE_4TH_RELAY */
+
+    /* Set input pins */
     pinMode(PIN_BUTTON1, INPUT_PULLUP);
     pinMode(PIN_BUTTON2, INPUT_PULLUP);
     pinMode(PIN_BUTTON3, INPUT_PULLUP);
 
-   // pinMode(PIN_IR_RECEIVER, INPUT);
-    // if (0 == MEMORIE_SCRISA) 
-    // {
-    //     /* Golesc memoria EEPROM */
-    //       for (int i = 0 ; i < EEPROM.length() ; i++) 
-    //       {
-    //          EEPROM.write(i, 0);
-    //       }
-        
-    //     /* Scriu in memoria EEPROM profilurile prestabilite */
-    //     EEPROM.put(ADRESA_STRUCTURA_CODURI, btnCodesIR);
-    // }
+#ifdef WRITTEN_MEM
 
-    /* Citesc din memoria EEPROM profilurile stocate */
-    EEPROM.get(ADRESA_STRUCTURA_CODURI, btnCodesIR_buffer);
+    /* Empty EEPROM  */
+      for (int i = 0 ; i < EEPROM.length() ; i++) 
+      {
+          EEPROM.write(i, 0);
+      }
     
+    /* Write predefined profiles into memory */
+    EEPROM.put(CODES_STRUCT_ADDR, btnCodesIR);
+#endif /* #ifdef WRITTEN_MEM */
 
+    /* Read stored profiles from EEPROM */
+    EEPROM.get(CODES_STRUCT_ADDR, btnCodesIR_buffer);
 }
-/* OS TASK fast: Se executa ciclic la fiecare 0.25 microsecunde */
+/* OS TASK fast: 0.25 uS period */
 void OS_task_fast()
 {
-    
 }
 
-/* OS TASK 1ms: Se executa ciclic la fiecare 1 milisecunda */
+/* OS TASK 1ms */
 void OS_task_1ms()
 {
      Btn_Cyclic();
@@ -62,20 +57,17 @@ void OS_task_1ms()
      MainAppStateMachine();
 }
 
-/* OS TASK 5ms: Se executa ciclic la fiecare 5 milisecunde */
+/* OS TASK 5ms */
 void OS_task_5ms()
 {
-  // schimbare_stare();
 }
 
-/* OS TASK 100ms: Se executa ciclic la fiecare 100 milisecunde */
+/* OS TASK 100ms */
 void OS_task_100ms()
 {
-    
 }
 
-/* OS TASK 200ms: Se executa ciclic la fiecare 200 milisecunde */
+/* OS TASK 200ms */
 void OS_task_200ms()
 {
-    
 }
